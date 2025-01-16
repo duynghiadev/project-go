@@ -45,7 +45,7 @@ Open application at http://localhost:3000
 
 ### Index page
 
-![](https://github.com/schadokar/go-to-do-app/blob/master/images/index.PNG)
+![](https://github.com/duynghiadev/project-go/blob/main/go-to-do-app/images/index.PNG?raw=true)
 
 ### Create task
 
@@ -55,7 +55,7 @@ Enter a task and Enter
 
 On completion of a task, click "done" Icon of the respective task card.
 
-![](https://github.com/schadokar/go-to-do-app/blob/master/images/taskComplete.PNG)
+![](https://github.com/duynghiadev/project-go/blob/main/go-to-do-app/images/taskComplete.PNG?raw=true)
 
 You'll notice on completion of task, card's bottom line color changed from yellow to green.
 
@@ -63,7 +63,7 @@ You'll notice on completion of task, card's bottom line color changed from yello
 
 To undone a task, click on "undo" Icon,
 
-![](https://github.com/schadokar/go-to-do-app/blob/master/images/createTask.PNG)
+![](https://github.com/duynghiadev/project-go/blob/main/go-to-do-app/images/createTask.PNG?raw=true)
 
 You'll notice on completion of task, card's bottom line color changed from green to yellow.
 
@@ -71,7 +71,7 @@ You'll notice on completion of task, card's bottom line color changed from green
 
 To delete a task, click on "delete" Icon.
 
-![](https://github.com/schadokar/go-to-do-app/blob/master/images/deletetask.PNG)
+![](https://github.com/duynghiadev/project-go/blob/main/go-to-do-app/images/deletetask.PNG?raw=true)
 
 ---
 
