@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"log"
 	"net/http"
 	"os"
@@ -19,10 +20,8 @@ import (
 )
 
 func main() {
-	// Load environment variables from .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
+	if err := godotenv.Load(); err != nil {
+		log.Printf("Warning: Error loading .env file: %v", err)
 	}
 
 	// Get credentials from environment variables
@@ -38,22 +37,51 @@ func main() {
 	// Construct the MongoDB URI
 	mongoConnectionURI := "mongodb+srv://" + mongoUsername + ":" + mongoPassword + "@" + mongoURI + "/" + mongoDB + "?retryWrites=true&w=majority"
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	// Create a background context for the MongoDB client
+	ctx := context.Background()
 
-	// Set MongoDB client options
-	clientOptions := options.Client().ApplyURI(mongoConnectionURI)
+	// Set MongoDB client options with longer timeouts
+	clientOptions := options.Client().
+		ApplyURI(mongoConnectionURI).
+		SetServerAPIOptions(options.ServerAPI(options.ServerAPIVersion1)).
+		SetTimeout(30 * time.Second).
+		SetSocketTimeout(30 * time.Second).
+		SetTLSConfig(&tls.Config{
+			MinVersion:         tls.VersionTLS12,
+			InsecureSkipVerify: false,
+		})
 
-	client, err := mongo.Connect(ctx, clientOptions)
-	// cp 0.006 (0.01) -> 1CPU x6 -> 6CPU
-	// RM 15Mb -> 128Mb
-	if err != nil {
-		log.Fatal(err)
+	// Connect to MongoDB with retry logic
+	var client *mongo.Client
+	var err error
+
+	for i := 0; i < 3; i++ {
+		connectCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		client, err = mongo.Connect(connectCtx, clientOptions)
+		cancel()
+
+		if err != nil {
+			log.Printf("Failed to connect to MongoDB, attempt %d: %v", i+1, err)
+			time.Sleep(2 * time.Second)
+			continue
+		}
+
+		// Try to ping the database
+		pingCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+		err = client.Ping(pingCtx, nil)
+		cancel()
+
+		if err != nil {
+			log.Printf("Failed to ping MongoDB, attempt %d: %v", i+1, err)
+			time.Sleep(2 * time.Second)
+			continue
+		}
+
+		break
 	}
 
-	err = client.Ping(ctx, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to connect to MongoDB after retries: %v", err)
 	}
 
 	log.Println("Connected to MongoDB!")
@@ -71,8 +99,10 @@ func main() {
 
 	// Create a server
 	srv := &http.Server{
-		Addr:    ":8080",
-		Handler: nil,
+		Addr:         ":8080",
+		Handler:      nil,
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
 	}
 
 	// Channel to listen for OS signals
@@ -92,17 +122,17 @@ func main() {
 	log.Println("Shutting down server...")
 
 	// Create a context with timeout for graceful shutdown
-	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// Shutdown the server gracefully
-	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatalf("Server Shutdown Failed:%+v", err)
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		log.Printf("Server Shutdown Failed: %+v", err)
 	}
 
 	// Disconnect from MongoDB
-	if err := client.Disconnect(ctx); err != nil {
-		log.Fatalf("MongoDB Disconnect Failed:%+v", err)
+	if err := client.Disconnect(shutdownCtx); err != nil {
+		log.Printf("MongoDB Disconnect Failed: %+v", err)
 	}
 
 	log.Println("Server exited properly")
