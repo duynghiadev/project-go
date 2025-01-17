@@ -1,13 +1,9 @@
 import SinglePost from "@/components/SinglePost";
 
-const page = ({ params }: any) => {
-  const { id } = params;
-
-  console.log(id);
-
+const page = () => {
   return (
     <div>
-      <SinglePost id={id} />
+      <SinglePost />
     </div>
   );
 };

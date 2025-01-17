@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Navbar = () => {
   return (
     <div>
@@ -25,55 +27,55 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
               <li>
-                <a>Item 1</a>
+                <Link href="/">Item 1</Link>
               </li>
               <li>
-                <a>Parent</a>
+                <Link href="/">Parent</Link>
                 <ul className="p-2">
                   <li>
-                    <a>Submenu 1</a>
+                    <Link href="/">Submenu 1</Link>
                   </li>
                   <li>
-                    <a>Submenu 2</a>
+                    <Link href="/">Submenu 2</Link>
                   </li>
                 </ul>
               </li>
               <li>
-                <a>Item 3</a>
+                <Link href="/">Item 3</Link>
               </li>
             </ul>
           </div>
-          <a href="/" className="btn btn-ghost text-xl">
+          <Link href="/" className="btn btn-ghost text-xl">
             TodoList by Golang
-          </a>
+          </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <a>Item 1</a>
+              <Link href="/">Item 1</Link>
             </li>
             <li>
               <details>
                 <summary>Parent</summary>
                 <ul className="p-2">
                   <li>
-                    <a>Submenu 1</a>
+                    <Link href="/">Submenu 1</Link>
                   </li>
                   <li>
-                    <a>Submenu 2</a>
+                    <Link href="/">Submenu 2</Link>
                   </li>
                 </ul>
               </details>
             </li>
             <li>
-              <a>Item 3</a>
+              <Link href="/">Item 3</Link>
             </li>
           </ul>
         </div>
         <div className="navbar-end">
-          <a href="/create" className="btn btn-accent">
+          <Link href="/create" className="btn btn-accent">
             Create Post
-          </a>
+          </Link>
         </div>
       </div>
     </div>
