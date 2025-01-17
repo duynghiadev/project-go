@@ -44,6 +44,8 @@ func main() {
 	r.Post("/todos", apiConfig.handlePostTodos)
 	r.Delete("/todos/{id}", apiConfig.handleDeleteTodos)
 	r.Patch("/todos/{id}", apiConfig.handleEditTodos)
+	r.Get("/todos", apiConfig.handleAllTodos)
+	r.Get("/todos/{id}", apiConfig.handleOneTodos)
 
 	http.ListenAndServe(":8000", r)
 }
