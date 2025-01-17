@@ -1,4 +1,5 @@
 import DeleteTodo from "@/components/DeleteTodo";
+import EditTodo from "@/components/EditTodo";
 
 const getSingleData = async (id: string) => {
   const res = await fetch(`http://localhost:8000/todos/${id}`, {
@@ -24,10 +25,14 @@ const SinglePost = async ({ id }: { id: string }) => {
           <p className="text-3xl uppercase">Title: {todo.Title}</p>
           <p>Content: {todo.Content}</p>
           <p>Createdat:{todo.Createdat}</p>
-          <p className="m-3">
-            <button className="btn btn-primary w-full gap-5">Edit</button>
-          </p>
-          <DeleteTodo todo={todo} />
+
+          <div className="m-5">
+            <DeleteTodo todo={todo} />
+          </div>
+
+          <div className="m-5">
+            <EditTodo todo={todo} />
+          </div>
         </div>
       )}
     </div>
