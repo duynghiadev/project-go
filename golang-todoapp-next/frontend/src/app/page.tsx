@@ -1,5 +1,9 @@
-import Image from "next/image";
+import ListAllTodo from "@/components/ListAllTodo";
 
 export default function Home() {
-  return <div>Hello</div>;
+  return (
+    <div className="flex justify-center items-center">
+      <ListAllTodo />
+    </div>
+  );
 }
