@@ -4,9 +4,11 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"os"
 	"todo/internal/database"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -15,7 +17,12 @@ type ApiConfig struct {
 }
 
 func main() {
-	connStr := "postgres://postgres:postgres@localhost/postgres?sslmode=disable"
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Failed to read godotenv")
+	}
+
+	connStr := os.Getenv("POSTGRES_URL")
 
 	log.Println(connStr)
 
@@ -35,6 +42,8 @@ func main() {
 	r := chi.NewRouter()
 
 	r.Post("/todos", apiConfig.handlePostTodos)
+	r.Delete("/todos/{id}", apiConfig.handleDeleteTodos)
+	r.Patch("/todos/{id}", apiConfig.handleEditTodos)
 
 	http.ListenAndServe(":8000", r)
 }
