@@ -1,4 +1,17 @@
 services:
+  golang:
+    container_name: golang
+    image: golang:1.0.0
+    build:
+      context: ./backend
+      dockerfile: go.dockerfile
+    environment:
+      POSTGRES_URL: postgres://postgres:postgres@db/postgres?sslmode=disable
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
   db:
     container_name: db
     image: postgres:16.3-alpine3.20

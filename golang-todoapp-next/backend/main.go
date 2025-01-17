@@ -8,7 +8,6 @@ import (
 	"todo/internal/database"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -17,14 +16,7 @@ type ApiConfig struct {
 }
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Failed to read godotenv")
-	}
-
 	connStr := os.Getenv("POSTGRES_URL")
-
-	log.Println(connStr)
 
 	conn, err := sql.Open("postgres", connStr)
 	if err != nil {
