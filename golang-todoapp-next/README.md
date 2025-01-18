@@ -1,5 +1,11 @@
 Các api được gọi ở trong folder `golang-todoapp-next` của ứng dụng postman
 
+chạy lệnh này để tạo database:
+
+- trước tiên phải cd vào backend/internal/schema
+
+  `goose postgres "postgres://postgres:postgres@localhost/postgres?sslmode=disable" up`
+
 ---
 
 # Golang Fullstack To-Do List App Tutorial with Next.js, PostgreSQL, and Docker
