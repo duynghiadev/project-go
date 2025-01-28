@@ -92,7 +92,10 @@ const Edit = () => {
                   className={`${errors.title && "error"}`}
                   placeholder="Please enter title"
                   {...register("title", {
-                    required: { value: true, message: "Title is required." },
+                    required: {
+                      value: true,
+                      message: "Title is required.",
+                    },
                     min: {
                       value: 3,
                       message: "Title should be minimum 3 characters.",
