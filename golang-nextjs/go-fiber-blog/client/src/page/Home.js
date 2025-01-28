@@ -19,6 +19,7 @@ const Home = () => {
       try {
         const apiUrl = process.env.REACT_APP_API_ROOT;
         const response = await axios.get(apiUrl);
+        console.log("response:", response);
 
         if (response.status === 200) {
           if (response?.data.statusText === "Ok") {
@@ -37,7 +38,7 @@ const Home = () => {
     return () => {};
   }, []);
 
-  console.log(apiData);
+  console.log("apiData:", apiData);
 
   if (loading) {
     return (

@@ -4,11 +4,11 @@ import { Col, Container, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 
 const Blog = () => {
-  const params = useParams();
-
-  console.log(params);
-
   const [apiData, setApiData] = useState(false);
+
+  const params = useParams();
+  console.log("params:", params);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,14 +28,14 @@ const Blog = () => {
     fetchData();
     return () => {};
   }, []);
+  console.log("apiData:", apiData);
 
-  console.log(apiData);
   return (
     <Container>
       {apiData && (
         <Row>
           <Col xs="6">
-            <h1>{apiData.title}ooooooooooooooooooooo</h1>
+            <h1>{apiData.title}</h1>
           </Col>
           <Col xs="6">
             <img
