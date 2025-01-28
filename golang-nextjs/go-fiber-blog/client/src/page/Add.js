@@ -18,7 +18,7 @@ const Add = () => {
 
   const saveForm = async (data) => {
     setLoading(true);
-    // console.log(data);
+    console.log("data when add new:", data);
 
     data.file = data.image[0];
     data.image = null;
@@ -66,13 +66,17 @@ const Add = () => {
                 className={`${errors.title && "error"}`}
                 placeholder="Please enter title"
                 {...register("title", {
-                  required: { value: true, message: "Title is required." },
+                  required: {
+                    value: true,
+                    message: "Title is required.",
+                  },
                   min: {
                     value: 3,
                     message: "Title should be minimum 3 characters.",
                   },
                 })}
               />
+              {console.log("error in input title:", errors.title)}
               {errors.title && (
                 <div className="error">{errors.title.message}</div>
               )}
@@ -90,6 +94,7 @@ const Add = () => {
                   },
                 })}
               />
+              {console.log("error in input post:", errors.post)}
               {errors.post && (
                 <div className="error">{errors.post.message}</div>
               )}
