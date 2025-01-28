@@ -51,7 +51,7 @@ const Edit = () => {
       const response = await axios.put(apiUrl, data, {
         headers: {
           "Content-Type": "multipart/form-data",
-        }
+        },
       });
 
       if (response.status === 200) {
@@ -121,14 +121,14 @@ const Edit = () => {
                 )}
               </Col>
               <Col xs="12" className="py-3">
-              <label>Image</label>
-              <input
-                type="file"
-                className={`${errors.image && "error"}`}
-                placeholder="Please enter content"
-                {...register("image")}
-              />
-            </Col>
+                <label>Image</label>
+                <input
+                  type="file"
+                  className={`${errors.image && "error"}`}
+                  placeholder="Please enter content"
+                  {...register("image")}
+                />
+              </Col>
               <Col>
                 <button type="submit">Save</button>
               </Col>
