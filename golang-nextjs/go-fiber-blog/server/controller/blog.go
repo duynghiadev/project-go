@@ -103,7 +103,7 @@ func BlogCreate(c *fiber.Ctx) error {
 		context["msg"] = "Something went wrong."
 	}
 
-	context["msg"] = "Record is saved successully."
+	context["msg"] = "Record is saved successfully."
 	context["data"] = record
 
 	c.Status(201)
