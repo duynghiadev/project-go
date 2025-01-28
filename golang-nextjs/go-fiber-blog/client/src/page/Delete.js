@@ -12,17 +12,18 @@ const Delete = () => {
       const apiUrl = process.env.REACT_APP_API_ROOT + "/" + params.id;
 
       const response = await axios.delete(apiUrl);
+      console.log("response delete:", response);
 
       if (response.status === 200) {
         navigate("/", {
-          state: "Record deleted succussfully.",
+          state: "Record deleted successfully.",
         });
       }
     } catch (error) {
       console.log(error);
     }
 
-    // console.log("Inside handledelete");
+    console.log("Inside handleDelete");
   };
 
   return (
