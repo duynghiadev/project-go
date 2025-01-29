@@ -1,6 +1,134 @@
+![1738190915722](image/README/1738190915722.png)
+
+# Uploading Docker Images to Docker Hub
+
+In this project, I have uploaded the images to Docker Hub (to save RAM, I’ve removed the images from my local machine). Next time, you can either pull the images from Docker Hub or run the following command to rebuild the images.
+
+1. Log in to Docker Hub:
+
+```
+docker login
+```
+
+2. Find the container ID (optional step to change the tag name): To find the container ID of the image you want to tag, you can use the following command to list all containers (both running and stopped):
+
+```
+docker ps -a
+```
+
+- This will show a list of all containers along with their IDs. Once you have the container ID, you can use it to tag the image.
+
+3. Tag the images (based on container ID): If you want to change the tag name based on the container ID, you can use the following command format:
+
+```
+docker tag
+```
+
+For example:
+
+```
+docker tag sha256:f2529a79b8ea1e93c4eebc843bdc702b524428868f84474f8080516f489dd8d5 duynghia/go-fullstack-app_goapp:latest
+
+docker tag sha256:6014f21bcd61a3cee8f5350ee2f24ace33f646d925c5ab0b95a6c83d76d2f7fc duynghia/go-fullstack-app_nextapp:latest
+```
+
+4. Push the images: After tagging the images, you can upload them to Docker Hub:
+
+```
+docker push duynghia/go-fullstack-app_goapp:latest
+
+docker push duynghia/go-fullstack-app_nextapp:latest
+```
+
+- This way, the images can be easily accessed from Docker Hub when needed!
+
+# 🚀 Docker Commands for This Project
+
+## ⚠ Issue: Running Multiple Commands Repeatedly
+
+Each time I run Docker Compose, I have to execute three separate commands:
+
+```sh
+docker compose up -d db
+docker compose up -d goapp
+docker compose up -d nextapp
+```
+
+This is repetitive. **How can I run all containers with a single command?**
+
+✅ **Solution:** Run all services at once:
+
+```sh
+docker compose up -d
+```
+
+This will start **all services** defined in `docker-compose.yml`.
+
+# Uploading Docker Images to Docker Hub
+
+In this project, I have uploaded the images to Docker Hub (to save RAM, I’ve removed the images from my local machine). Next time, you can either pull the images from Docker Hub or run the following command to rebuild the images.
+
+1. Log in to Docker Hub:
+
+```sh
+docker login
+```
+
+2. Find the container ID (optional step to change the tag name): To find the container ID of the image you want to tag, you can use the following command to list all containers (both running and stopped):
+
+```sh
+docker ps -a
+```
+
+- This will show a list of all containers along with their IDs. Once you have the container ID, you can use it to tag the image.
+
+3. Tag the images (based on container ID): If you want to change the tag name based on the container ID, you can use the following command format:
+
+```sh
+docker tag
+```
+
+For example:
+
+```sh
+docker tag sha256:f2529a79b8ea1e93c4eebc843bdc702b524428868f84474f8080516f489dd8d5 duynghia/go-fullstack-app_goapp:latest
+
+docker tag sha256:6014f21bcd61a3cee8f5350ee2f24ace33f646d925c5ab0b95a6c83d76d2f7fc duynghia/go-fullstack-app_nextapp:latest
+```
+
+4. Push the images: After tagging the images, you can upload them to Docker Hub:
+
+```sh
+docker push duynghia/go-fullstack-app_goapp:latest
+
+docker push duynghia/go-fullstack-app_nextapp:latest
+```
+
+- This way, the images can be easily accessed from Docker Hub when needed!
+
 ---
 
+# 🚀 Docker Commands for This Project
 
+## ⚠ Issue: Running Multiple Commands Repeatedly
+
+Each time I run Docker Compose, I have to execute three separate commands:
+
+```sh
+docker compose up -d db
+docker compose up -d goapp
+docker compose up -d nextapp
+```
+
+This is repetitive. **How can I run all containers with a single command?**
+
+✅ **Solution:** Run all services at once:
+
+```sh
+docker compose up -d
+```
+
+This will start **all services** defined in `docker-compose.yml`.
 
 # 🚀 Docker Commands for This Project
 
