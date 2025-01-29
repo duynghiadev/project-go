@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface Card {
   id: number;
@@ -14,6 +14,6 @@ const CardComponent: React.FC<{ card: Card }> = ({ card }) => {
       <div className="text-md text-gray-700">{card.email}</div>
     </div>
   );
-}
+};
 
 export default CardComponent;
