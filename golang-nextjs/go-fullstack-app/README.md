@@ -6,13 +6,13 @@ In this project, I have uploaded the images to Docker Hub (to save RAM, I’ve r
 
 1. Log in to Docker Hub:
 
-```
+```sh
 docker login
 ```
 
 2. Find the container ID (optional step to change the tag name): To find the container ID of the image you want to tag, you can use the following command to list all containers (both running and stopped):
 
-```
+```sh
 docker ps -a
 ```
 
@@ -20,13 +20,13 @@ docker ps -a
 
 3. Tag the images (based on container ID): If you want to change the tag name based on the container ID, you can use the following command format:
 
-```
+```sh
 docker tag
 ```
 
 For example:
 
-```
+```sh
 docker tag sha256:f2529a79b8ea1e93c4eebc843bdc702b524428868f84474f8080516f489dd8d5 duynghia/go-fullstack-app_goapp:latest
 
 docker tag sha256:6014f21bcd61a3cee8f5350ee2f24ace33f646d925c5ab0b95a6c83d76d2f7fc duynghia/go-fullstack-app_nextapp:latest
@@ -34,7 +34,7 @@ docker tag sha256:6014f21bcd61a3cee8f5350ee2f24ace33f646d925c5ab0b95a6c83d76d2f7
 
 4. Push the images: After tagging the images, you can upload them to Docker Hub:
 
-```
+```sh
 docker push duynghia/go-fullstack-app_goapp:latest
 
 docker push duynghia/go-fullstack-app_nextapp:latest
