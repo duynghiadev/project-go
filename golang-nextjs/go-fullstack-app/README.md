@@ -1,39 +1,91 @@
-# Summary these command build and run docker in this project
+# 🚀 Docker Commands for This Project
+
+## ⚠ Issue: Running Multiple Commands Repeatedly
+
+Each time I run Docker Compose, I have to execute three separate commands:
+
+```sh
+docker compose up -d db
+docker compose up -d goapp
+docker compose up -d nextapp
+```
+
+This is repetitive. **How can I run all containers with a single command?**
+
+✅ **Solution:** Run all services at once:
+
+```sh
+docker compose up -d
+```
+
+This will start **all services** defined in `docker-compose.yml`.
 
 ---
 
-this is command to see database postgres using command line, show in terminal
+# 🛠 Key Docker Commands in This Project
 
-`docker exec -it db psql -U postgres`
+## 📌 1. Connect to PostgreSQL Database in Docker
+
+Run this command to access the PostgreSQL database via the terminal:
+
+```sh
+docker exec -it db psql -U postgres
+```
+
+## 📌 2. Initialize the Database (`db`) in Docker
+
+This command starts the database container based on `docker-compose.yml`:
+
+```sh
+docker compose up -d db
+```
+
+## 📌 3. Build the App Image in Docker
+
+Navigate to the `go-fullstack-app` folder and build the Docker image:
+
+```sh
+docker compose build
+```
+
+## 📌 4. Start the Backend API (`goapp`)
+
+This command creates and starts the `goapp` container:
+
+```sh
+docker compose up -d goapp
+```
+
+## 📌 5. Start the Frontend (`nextapp`)
+
+This command creates and starts the `nextapp` container:
+
+```sh
+docker compose up -d nextapp
+```
 
 ---
 
-this is command initial database `db` in docker, it based on file `compose.yaml`, at part `db: ..`
+# 🔍 Check Running Containers
 
-`docker compose up -d db`
+To verify that all containers are running, use:
 
----
-
-this is command to build app into docker, stand up at folder `go-fullstack-app`, then run command:
-
-`docker compose build`
+```sh
+docker ps -a
+```
 
 ---
 
-this is command to create `./api` in folder backend
+# 🎯 Final Steps: Run Everything with One Command
 
-`docker compose up -d goapp`
+Instead of running separate commands for each service, use:
+
+```sh
+docker compose up -d
+```
+
+This starts **all services** defined in `docker-compose.yml`.
 
 ---
 
-then, i running command `docker ps -a` to see add container are running in docker
-
-# Run these are command line below to open app
-
-Running this command to create container `blogapp`
-
-`docker compose up -d goapp`
-
-Running this command to create container `nextapp`
-
-`docker compose up -d nextapp`
+This document provides a clear and structured guide for managing Docker containers efficiently. 🚀
