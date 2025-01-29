@@ -2,6 +2,7 @@ package controller
 
 import (
 	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -51,40 +52,52 @@ func BlogDetail(c *gin.Context) {
 
 // Add a Blog into Database
 func BlogCreate(c *gin.Context) {
-	context := gin.H{
+	response := gin.H{
 		"statusText": "Ok",
 		"msg":        "Add a Blog",
 	}
 
-	record := new(model.Blog)
+	var record model.Blog
 
-	if err := c.ShouldBindJSON(record); err != nil {
-		log.Println("Error in parsing request.")
-		c.JSON(400, gin.H{"msg": "Something went wrong."})
+	// Handle multipart form
+	if err := c.ShouldBind(&record); err != nil {
+		log.Println("Error in parsing request:", err)
+		response["statusText"] = ""
+		response["msg"] = "Something went wrong"
+		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	// File upload
+	// File upload handling
 	file, err := c.FormFile("file")
-	if err == nil && file.Size > 0 {
+	if err != nil && err != http.ErrMissingFile {
+		log.Println("Error in file upload:", err)
+	}
+
+	if file != nil && file.Size > 0 {
 		filename := "./static/uploads/" + file.Filename
 		if err := c.SaveUploadedFile(file, filename); err != nil {
-			log.Println("Error in file uploading...", err)
+			log.Println("Error in file uploading:", err)
+			response["statusText"] = ""
+			response["msg"] = "Error uploading file"
+			c.JSON(http.StatusInternalServerError, response)
+			return
 		}
 		record.Image = filename
 	}
 
-	result := database.DBConn.Create(record)
+	result := database.DBConn.Create(&record)
 	if result.Error != nil {
-		log.Println("Error in saving data.")
-		c.JSON(400, gin.H{"msg": "Something went wrong."})
+		log.Println("Error in saving data:", result.Error)
+		response["statusText"] = ""
+		response["msg"] = "Something went wrong"
+		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
 
-	context["msg"] = "Record is saved successfully."
-	context["data"] = record
-
-	c.JSON(201, context)
+	response["msg"] = "Record is saved successfully"
+	response["data"] = record
+	c.JSON(http.StatusCreated, response)
 }
 
 // Update a Blog
@@ -99,7 +112,7 @@ func BlogUpdate(c *gin.Context) {
 		return
 	}
 
-	if err := c.ShouldBindJSON(&record); err != nil {
+	if err := c.ShouldBind(&record); err != nil {
 		log.Println("Error in parsing request.")
 		c.JSON(400, gin.H{"msg": "Something went wrong."})
 		return
@@ -108,7 +121,7 @@ func BlogUpdate(c *gin.Context) {
 	// File upload
 	file, err := c.FormFile("file")
 	if err == nil && file.Size > 0 {
-		filename := "static/uploads/" + file.Filename
+		filename := "./static/uploads/" + file.Filename
 		if err := c.SaveUploadedFile(file, filename); err != nil {
 			log.Println("Error in file uploading...", err)
 		}
