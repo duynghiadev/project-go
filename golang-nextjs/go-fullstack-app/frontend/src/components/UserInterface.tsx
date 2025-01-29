@@ -49,18 +49,59 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ backendName }) => {
   }, [backendName, apiUrl]);
 
   // Create a new user
+  // const createUser = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const response = await axios.post(
+  //       `${apiUrl}/api/${backendName}/users`,
+  //       newUser
+  //     );
+  //     setUsers([response.data, ...users]);
+  //     setNewUser({ name: "", email: "" });
+  //   } catch (error) {
+  //     console.error("Error creating user:", error);
+  //   }
+  // };
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const createUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!newUser.name || !newUser.email) {
+      alert("Both name and email are required.");
+      return;
+    }
+
+    if (!validateEmail(newUser.email)) {
+      alert("Invalid email format.");
+      return;
+    }
 
     try {
       const response = await axios.post(
         `${apiUrl}/api/${backendName}/users`,
         newUser
       );
-      setUsers([response.data, ...users]);
-      setNewUser({ name: "", email: "" });
-    } catch (error) {
-      console.error("Error creating user:", error);
+
+      if (response.status === 201) {
+        alert("User created successfully!");
+        setUsers((prevUsers) => [response.data, ...prevUsers]);
+        setNewUser({ name: "", email: "" });
+      }
+    } catch (error: any) {
+      if (error.response?.status === 400) {
+        alert("Invalid email format.");
+      } else if (error.response?.status === 409) {
+        alert("Email already exists.");
+      } else {
+        console.error("Error creating user:", error);
+        alert("An error occurred while creating the user.");
+      }
     }
   };
 
@@ -128,15 +169,6 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ backendName }) => {
   };
 
   // Delete a user
-  // const deleteUser = async (userId: number) => {
-  //   try {
-  //     await axios.delete(`${apiUrl}/api/${backendName}/users/${userId}`);
-  //     setUsers(users.filter((user) => user.id !== userId));
-  //   } catch (error) {
-  //     console.error("Error deleting user:", error);
-  //   }
-  // };
-
   const deleteUser = async (userId: number) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this user?"

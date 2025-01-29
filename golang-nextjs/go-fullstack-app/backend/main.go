@@ -128,13 +128,39 @@ func getUser(db *sql.DB) http.HandlerFunc {
 func createUser(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var u User
-		json.NewDecoder(r.Body).Decode(&u)
-
-		err := db.QueryRow("INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id", u.Name, u.Email).Scan(&u.Id)
-		if err != nil {
-			log.Fatal(err)
+		if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+			http.Error(w, `{"error": "Invalid request body"}`, http.StatusBadRequest)
+			return
 		}
 
+		// Validate email format
+		if !isValidEmail(u.Email) {
+			http.Error(w, `{"error": "Invalid email format"}`, http.StatusBadRequest)
+			return
+		}
+
+		// Check if email already exists
+		var exists bool
+		err := db.QueryRow("SELECT EXISTS (SELECT 1 FROM users WHERE email = $1)", u.Email).Scan(&exists)
+		if err != nil {
+			http.Error(w, `{"error": "Database error"}`, http.StatusInternalServerError)
+			return
+		}
+		if exists {
+			http.Error(w, `{"error": "Email already exists"}`, http.StatusConflict)
+			return
+		}
+
+		// Insert user into database
+		err = db.QueryRow("INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id", u.Name, u.Email).Scan(&u.Id)
+		if err != nil {
+			http.Error(w, `{"error": "Failed to create user"}`, http.StatusInternalServerError)
+			return
+		}
+
+		// Return success response
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(u)
 	}
 }
