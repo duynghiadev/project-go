@@ -16,32 +16,28 @@ func init() {
 	if err := godotenv.Load(); err != nil {
 		log.Println("Error in loading env file.")
 	}
-
 	database.ConnectDB()
 }
 
 func main() {
-
-	// Close the db connection using defer clause
 	sqlDb, err := database.DBConn.DB()
-
 	if err != nil {
 		log.Println("Error in getting db conn.")
 	}
-
 	defer sqlDb.Close()
 
-	port := os.Getenv("port")
-
+	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8001"
+		port = "8000"
 	}
 
 	gin.SetMode(gin.ReleaseMode)
-
 	router := gin.New()
 
-	// Add middleware
+	// Static file serving
+	router.Static("/static", "./static") // Thêm dòng này để phục vụ file tĩnh
+
+	// Middleware
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{"PUT", "PATCH", "GET", "POST", "DELETE"},
