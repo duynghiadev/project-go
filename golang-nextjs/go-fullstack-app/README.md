@@ -78,13 +78,21 @@ docker ps -a
 
 # 🎯 Final Steps: Run Everything with One Command
 
-Instead of running separate commands for each service, use:
+1. Instead of running separate commands for each service, use:
 
 ```sh
 docker compose up -d
 ```
 
 This starts **all services** defined in `docker-compose.yml`.
+
+3. To run the **build process** and **start** the containers immediately, you can use:
+
+```
+docker compose up --build -d
+```
+
+This command builds the images and starts the containers in the background. 🚀
 
 ---
 
