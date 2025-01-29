@@ -40,7 +40,11 @@ docker push duynghia/go-fullstack-app_goapp:latest
 docker push duynghia/go-fullstack-app_nextapp:latest
 ```
 
-- This way, the images can be easily accessed from Docker Hub when needed!
+This way, the images can be easily accessed from Docker Hub when needed!
+
+![1738191779154](image/README/1738191779154.png)
+
+---
 
 # 🚀 Docker Commands for This Project
 
