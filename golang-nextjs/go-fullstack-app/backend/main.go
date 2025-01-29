@@ -63,7 +63,6 @@ func enableCORS(next http.Handler) http.Handler {
 		// Pass down the request to the next middleware (or final handler)
 		next.ServeHTTP(w, r)
 	})
-
 }
 
 func jsonContentTypeMiddleware(next http.Handler) http.Handler {
