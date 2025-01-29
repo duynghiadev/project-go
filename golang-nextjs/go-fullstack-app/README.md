@@ -90,7 +90,9 @@ docker compose up -d
 
 This starts **all services** defined in `docker-compose.yml`.
 
-3. To run the **build process** and **start** the containers immediately, you can use:
+2. To run the **build process** and **start** the containers immediately, you can use:
+
+Each time edit code, then build again
 
 ```
 docker compose up --build -d

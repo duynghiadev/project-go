@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
@@ -73,6 +74,14 @@ func jsonContentTypeMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+// Email validation function
+func isValidEmail(email string) bool {
+	// Simple regex for validating email format
+	regex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+	re := regexp.MustCompile(regex)
+	return re.MatchString(email)
+}
+
 // get all users
 func getUsers(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -134,25 +143,52 @@ func createUser(db *sql.DB) http.HandlerFunc {
 func updateUser(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var u User
-		json.NewDecoder(r.Body).Decode(&u)
 
+		// Decode JSON body and handle errors
+		if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+			http.Error(w, "Invalid request payload", http.StatusBadRequest)
+			return
+		}
+
+		// Validate email format
+		if !isValidEmail(u.Email) {
+			http.Error(w, "Invalid email format", http.StatusBadRequest)
+			return
+		}
+
+		// Get the user ID from the URL
 		vars := mux.Vars(r)
 		id := vars["id"]
 
 		// Execute the update query
-		_, err := db.Exec("UPDATE users SET name = $1, email = $2 WHERE id = $3", u.Name, u.Email, id)
+		result, err := db.Exec("UPDATE users SET name = $1, email = $2 WHERE id = $3", u.Name, u.Email, id)
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, "Database error", http.StatusInternalServerError)
+			log.Println("Error updating user:", err)
+			return
 		}
 
-		// Retrieve the updated user data from the database
+		// Check if any row was affected
+		rowsAffected, _ := result.RowsAffected()
+		if rowsAffected == 0 {
+			http.Error(w, "User not found", http.StatusNotFound)
+			return
+		}
+
+		// Retrieve the updated user data
 		var updatedUser User
-		err = db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", id).Scan(&updatedUser.Id, &updatedUser.Name, &updatedUser.Email)
+		err = db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", id).
+			Scan(&updatedUser.Id, &updatedUser.Name, &updatedUser.Email)
+
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, "User not found after update", http.StatusNotFound)
+			log.Println("Error fetching updated user:", err)
+			return
 		}
 
-		// Send the updated user data in the response
+		// Send back the updated user as JSON
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(updatedUser)
 	}
 }

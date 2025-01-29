@@ -65,24 +65,91 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ backendName }) => {
   };
 
   // Update a user
+  // const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     await axios.put(`${apiUrl}/api/${backendName}/users/${updateUser.id}`, {
+  //       name: updateUser.name,
+  //       email1: updateUser.email,
+  //     });
+  //     setUpdateUser({ id: "", name: "", email: "" });
+  //     setUsers(
+  //       users.map((user) => {
+  //         if (user.id === parseInt(updateUser.id)) {
+  //           return {
+  //             ...user,
+  //             name: updateUser.name,
+  //             email: updateUser.email,
+  //           };
+  //         }
+  //         return user;
+  //       })
+  //     );
+  //   } catch (error) {
+  //     console.error("Error updating user:", error);
+  //   }
+  // };
+
   const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Validate required fields
+    if (!updateUser.id) {
+      alert("User ID is required.");
+      return;
+    }
+    if (!updateUser.name.trim()) {
+      alert("Name is required.");
+      return;
+    }
+    if (!updateUser.email.trim()) {
+      alert("Email is required.");
+      return;
+    }
+
+    // Validate email format using regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(updateUser.email)) {
+      alert("Invalid email format.");
+      return;
+    }
+
     try {
-      await axios.put(`${apiUrl}/api/${backendName}/users/${updateUser.id}`, {
-        name: updateUser.name,
-        email: updateUser.email,
-      });
-      setUpdateUser({ id: "", name: "", email: "" });
-      setUsers(
-        users.map((user) => {
-          if (user.id === parseInt(updateUser.id)) {
-            return { ...user, name: updateUser.name, email: updateUser.email };
-          }
-          return user;
-        })
+      const response = await axios.put(
+        `${apiUrl}/api/${backendName}/users/${updateUser.id}`,
+        {
+          name: updateUser.name,
+          email: updateUser.email,
+        }
       );
-    } catch (error) {
-      console.error("Error updating user:", error);
+
+      // Handle user not found case
+      if (response.status === 404) {
+        alert("User not found in the system.");
+        return;
+      }
+
+      // Update the user list
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === parseInt(updateUser.id)
+            ? { ...user, name: updateUser.name, email: updateUser.email }
+            : user
+        )
+      );
+
+      // Reset the input fields
+      setUpdateUser({ id: "", name: "", email: "" });
+
+      alert("User updated successfully!");
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        alert("User not found in the system.");
+      } else {
+        console.error("Error updating user:", error);
+        alert("An error occurred while updating the user.");
+      }
     }
   };
 
