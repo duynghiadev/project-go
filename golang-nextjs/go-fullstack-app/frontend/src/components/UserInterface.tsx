@@ -128,12 +128,37 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ backendName }) => {
   };
 
   // Delete a user
+  // const deleteUser = async (userId: number) => {
+  //   try {
+  //     await axios.delete(`${apiUrl}/api/${backendName}/users/${userId}`);
+  //     setUsers(users.filter((user) => user.id !== userId));
+  //   } catch (error) {
+  //     console.error("Error deleting user:", error);
+  //   }
+  // };
+
   const deleteUser = async (userId: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this user?"
+    );
+    if (!confirmDelete) return;
+
     try {
-      await axios.delete(`${apiUrl}/api/${backendName}/users/${userId}`);
-      setUsers(users.filter((user) => user.id !== userId));
-    } catch (error) {
-      console.error("Error deleting user:", error);
+      const response = await axios.delete(
+        `${apiUrl}/api/${backendName}/users/${userId}`
+      );
+
+      if (response.status === 200) {
+        alert("User deleted successfully!");
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      }
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        alert("User not found in the system.");
+      } else {
+        console.error("Error deleting user:", error);
+        alert("An error occurred while deleting the user.");
+      }
     }
   };
 

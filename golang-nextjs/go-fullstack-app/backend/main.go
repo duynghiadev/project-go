@@ -194,25 +194,52 @@ func updateUser(db *sql.DB) http.HandlerFunc {
 }
 
 // delete user
+// func deleteUser(db *sql.DB) http.HandlerFunc {
+// 	return func(w http.ResponseWriter, r *http.Request) {
+// 		vars := mux.Vars(r)
+// 		id := vars["id"]
+
+// 		var u User
+// 		err := db.QueryRow("SELECT * FROM users WHERE id = $1", id).Scan(&u.Id, &u.Name, &u.Email)
+// 		if err != nil {
+// 			w.WriteHeader(http.StatusNotFound)
+// 			return
+// 		} else {
+// 			_, err := db.Exec("DELETE FROM users WHERE id = $1", id)
+// 			if err != nil {
+// 				//todo : fix error handling
+// 				w.WriteHeader(http.StatusNotFound)
+// 				return
+// 			}
+
+// 			json.NewEncoder(w).Encode("User deleted")
+// 		}
+// 	}
+// }
+
 func deleteUser(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id := vars["id"]
 
+		// Check if user exists
 		var u User
-		err := db.QueryRow("SELECT * FROM users WHERE id = $1", id).Scan(&u.Id, &u.Name, &u.Email)
+		err := db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", id).Scan(&u.Id, &u.Name, &u.Email)
 		if err != nil {
-			w.WriteHeader(http.StatusNotFound)
+			http.Error(w, `{"error": "User not found"}`, http.StatusNotFound)
 			return
-		} else {
-			_, err := db.Exec("DELETE FROM users WHERE id = $1", id)
-			if err != nil {
-				//todo : fix error handling
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-
-			json.NewEncoder(w).Encode("User deleted")
 		}
+
+		// Delete user
+		_, err = db.Exec("DELETE FROM users WHERE id = $1", id)
+		if err != nil {
+			http.Error(w, `{"error": "Failed to delete user"}`, http.StatusInternalServerError)
+			return
+		}
+
+		// Return success response
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]string{"message": "User deleted successfully"})
 	}
 }
