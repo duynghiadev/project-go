@@ -2,6 +2,7 @@
 
 - [Video Tutorial](https://www.youtube.com/watch?v=7VLmLOiQ3ck&list=PLYEESps429vrFV0yiN_MCaDPhnYb0qRxK)
 - All request call api in folder ecom (postman)
+- When call api, must have Authorization![1738337509808](image/README/1738337509808.png)
 
 ---
 
