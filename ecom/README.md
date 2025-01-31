@@ -1,8 +1,17 @@
 ## E-commerce REST API in Go
 
-- [Video Tutorial](https://www.youtube.com/watch?v=7VLmLOiQ3ck&list=PLYEESps429vrFV0yiN_MCaDPhnYb0qRxK)
-- All request call api in folder ecom (postman)
-- When call api, must have Authorization![1738337509808](image/README/1738337509808.png)
+[Video Tutorial](https://www.youtube.com/watch?v=7VLmLOiQ3ck&list=PLYEESps429vrFV0yiN_MCaDPhnYb0qRxK)
+
+All request call api in folder ecom (postman)
+
+**When calling an API, authorization is required:**
+
+1. **Login** to obtain a token.
+2. **Copy the token** from the response.
+3. **Go to the Headers** section.
+4. **Create a key** named `Authorization` and paste the copied token as its value.
+
+![1738337509808](image/README/1738337509808.png)
 
 ---
 
