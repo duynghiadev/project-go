@@ -1,6 +1,7 @@
 ## E-commerce REST API in Go
 
-[Video Tutorial](https://www.youtube.com/watch?v=7VLmLOiQ3ck&list=PLYEESps429vrFV0yiN_MCaDPhnYb0qRxK)
+- [Video Tutorial](https://www.youtube.com/watch?v=7VLmLOiQ3ck&list=PLYEESps429vrFV0yiN_MCaDPhnYb0qRxK)
+- All request call api in folder ecom (postman)
 
 ---
 
