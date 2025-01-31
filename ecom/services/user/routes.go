@@ -64,6 +64,7 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
+	// get JSON payload
 	var user types.RegisterUserPayload
 	if err := utils.ParseJSON(r, &user); err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err)

@@ -26,20 +26,20 @@ func NewAPIServer(addr string, db *sql.DB) *APIServer {
 
 func (s *APIServer) Run() error {
 	router := mux.NewRouter()
-	subrouter := router.PathPrefix("/api/v1").Subrouter()
+	subRouter := router.PathPrefix("/api/v1").Subrouter()
 
 	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(userStore)
-	userHandler.RegisterRoutes(subrouter)
+	userHandler.RegisterRoutes(subRouter)
 
 	productStore := product.NewStore(s.db)
 	productHandler := product.NewHandler(productStore, userStore)
-	productHandler.RegisterRoutes(subrouter)
+	productHandler.RegisterRoutes(subRouter)
 
 	orderStore := order.NewStore(s.db)
 
 	cartHandler := cart.NewHandler(productStore, orderStore, userStore)
-	cartHandler.RegisterRoutes(subrouter)
+	cartHandler.RegisterRoutes(subRouter)
 
 	// Serve static files
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("static")))
