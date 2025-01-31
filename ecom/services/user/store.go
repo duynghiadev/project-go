@@ -31,6 +31,7 @@ func (s *Store) GetUserByEmail(email string) (*types.User, error) {
 	}
 
 	u := new(types.User)
+	// u := &types.User{} // equivalent above
 	for rows.Next() {
 		u, err = scanRowsIntoUser(rows)
 		if err != nil {
