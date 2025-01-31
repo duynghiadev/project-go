@@ -2,6 +2,10 @@
 
 [Video Tutorial](https://www.youtube.com/watch?v=7VLmLOiQ3ck&list=PLYEESps429vrFV0yiN_MCaDPhnYb0qRxK)
 
+![1738295729165](image/README/1738295729165.png)
+
+In this course we're going to be building a production-ready E-commerce REST API in Go using JWT authentication, we'll be testing our services and connecting our server to a MySQL. We'll build everything from scratch so that I teach you just enough for you to be able to go on your own and not having to watch another video on how to build APIs in Go.
+
 ### Installation
 
 There are a few tools that you need to install to run the project.
