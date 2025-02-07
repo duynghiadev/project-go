@@ -126,6 +126,12 @@ func (s *APIServer) handleCreateAccount(w http.ResponseWriter, r *http.Request) 
 		return err
 	}
 
+	tokenString, err := createJWT(account)
+	if err != nil {
+		return err
+	}
+	fmt.Println("JWT Token:", tokenString)
+
 	return WriteJSON(w, http.StatusOK, account)
 }
 
