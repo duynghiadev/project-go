@@ -2,6 +2,16 @@
 
 ---
 
+### What tech are we using, pretty simple:
+
+- Go 1.22
+- Docker
+
+- Postgres running on Docker
+- Swagger for docs
+
+- Golang migrate for migrations
+
 ### Testing rate limiter
 
 ```bash
