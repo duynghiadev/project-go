@@ -1,4 +1,4 @@
-package tutorialvideo
+package main
 
 import (
 	"net/http"

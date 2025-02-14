@@ -1,7 +1,8 @@
-package tutorialvideo
+package main
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 )
 
@@ -38,7 +39,30 @@ func (a *api) createUsersHandler(w http.ResponseWriter, r *http.Request) {
 		LastName:  payload.LastName,
 	}
 
-	users = append(users, u)
+	if err = insertUser(u); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	w.WriteHeader(http.StatusCreated)
+}
+
+func insertUser(u User) error {
+	// input validation
+	if u.FirstName == "" {
+		return errors.New("First name is required")
+	}
+	if u.LastName == "" {
+		return errors.New("Last name is required")
+	}
+
+	// storage validation
+	for _, user := range users {
+		if user.FirstName == u.LastName && user.LastName == u.LastName {
+			return errors.New("User already exists")
+		}
+	}
+
+	users = append(users, u)
+	return nil
 }

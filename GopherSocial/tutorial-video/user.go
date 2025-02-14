@@ -1,4 +1,4 @@
-package tutorialvideo
+package main
 
 type User struct {
 	FirstName string `json:"first_name"`
